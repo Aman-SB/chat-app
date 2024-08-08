@@ -19,18 +19,18 @@ public class Chat {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "chat_id")
-    private Long chatId;
+    @Column(name = "chat_id", unique = true , nullable = false)
+    Integer chatId;
 
     @Column(nullable = true)
-    private String chatName;
+    String chatName;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt;
+    LocalDateTime createdAt;
 
     @ManyToMany(mappedBy = "chats")
-    private Set<User> users = new HashSet<>();
+    Set<User> users = new HashSet<>();
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Message> messages = new HashSet<>();
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    Set<Message> messages = new HashSet<>();
 }

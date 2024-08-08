@@ -14,61 +14,55 @@ import java.util.*;
 @Entity
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users")
 @Builder
+@Table(name = "users")
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id")
+    @Column(name = "user_id" , unique = true , nullable = false)
     Integer userId;
 
     @Column(nullable = false)
     String fullName;
 
-
     @Column(nullable = false , unique = true)
     String userName;
 
-
-    @Column(unique = true, length = 100, nullable = false)
+    @Column(unique = true, nullable = false)
     String email;
 
     @Column(nullable = false)
     String password;
 
-//    @CreationTimestamp
-//    @Column(updatable = false, name = "created_at")
-//    private Date createdAt;
-//
-//    @UpdateTimestamp
-//    @Column(name = "updated_at")
-//    private Date updatedAt;
+    @CreationTimestamp
+    @Column(updatable = false, name = "created_at")
+    private Date createdAt;
+
+    @UpdateTimestamp
+    @Column(name = "updated_at")
+    private Date updatedAt;
 
     @Column(nullable = false)
     LocalDateTime lastLogin;
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany
     @JoinTable(
-            name="user_role_junction",
-            joinColumns = {@JoinColumn(name="user_id")},
-            inverseJoinColumns = {@JoinColumn(name="role_id")}
+            name="user_role",
+            joinColumns = @JoinColumn(name="user_id"),
+            inverseJoinColumns = @JoinColumn(name="role_id")
     )
-    private Set<Role> authorities;
+    private Set<Role> authorities = new HashSet<>();
 
-    @ManyToMany(fetch=FetchType.EAGER)
+    @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
-            name = "user_chat_junction",
+            name = "user_chat",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "chat_id")
     )
     private Set<Chat> chats = new HashSet<>();
-
-    public User(){
-        super();
-        authorities = new HashSet<>();
-    }
 
     public User(int userId, String userName, String password, Set<Role> authorities) {
         super();
@@ -85,7 +79,7 @@ public class User implements UserDetails {
 
     @Override
     public String getUsername() {
-        return this.email;
+        return this.userName;
     }
 
     @Override
