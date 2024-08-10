@@ -1,60 +1,77 @@
 package com.aman.chat_application.Model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
+import org.hibernate.validator.constraints.UniqueElements;
+import org.springframework.security.core.CredentialsContainer;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
+
 @Entity
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
-@FieldDefaults(level = AccessLevel.PRIVATE)
+@AllArgsConstructor
 @Builder
-@Table(name = "users")
-public class User implements UserDetails {
+@FieldDefaults(level = AccessLevel.PRIVATE)
+@Table(name = "users" ,
+uniqueConstraints = {
+        @UniqueConstraint(columnNames = "username"),
+        @UniqueConstraint(columnNames = "email")
+})
+public class User{
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    @Column(name = "user_id" , unique = true , nullable = false)
+    @Column(name = "user_id")
     Integer userId;
+
+    @NotBlank
+    @Size(max = 20)
+    @Column(name = "username")
+    String userName;
 
     @Column(nullable = false)
     String fullName;
 
-    @Column(nullable = false , unique = true)
-    String userName;
-
-    @Column(unique = true, nullable = false)
+    @NotBlank
+    @Size(max = 50)
+    @Column(name = "email")
     String email;
 
-    @Column(nullable = false)
+    @Size(max = 120)
+    @Column(nullable = false, name = "password")
+    @JsonIgnore
     String password;
 
-    @CreationTimestamp
-    @Column(updatable = false, name = "created_at")
-    private Date createdAt;
+    private boolean accountNonLocked = true;
+    private boolean accountNonExpired = true;
+    private boolean credentialsNonExpired = true;
+    private boolean enabled = true;
 
-    @UpdateTimestamp
-    @Column(name = "updated_at")
-    private Date updatedAt;
+    LocalDate credentialsExpiryDate;
+    LocalDate accountExpiryDate;
 
-    @Column(nullable = false)
-    LocalDateTime lastLogin;
+    private String twoFactorySecret;
+    boolean isTwoFactorEnabled = false;
+    private String signUpMethod;
 
-    @ManyToMany
-    @JoinTable(
-            name="user_role",
-            joinColumns = @JoinColumn(name="user_id"),
-            inverseJoinColumns = @JoinColumn(name="role_id")
-    )
-    private Set<Role> authorities = new HashSet<>();
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "role_id",referencedColumnName = "role_id")
+    @JsonBackReference
+    @ToString.Exclude
+    Role role;
 
     @ManyToMany(cascade = {CascadeType.ALL})
     @JoinTable(
@@ -64,41 +81,33 @@ public class User implements UserDetails {
     )
     private Set<Chat> chats = new HashSet<>();
 
-    public User(int userId, String userName, String password, Set<Role> authorities) {
-        super();
-        this.userId = userId;
+    @CreationTimestamp
+    @Column(updatable = false)
+    LocalDateTime createdDate;
+
+    @UpdateTimestamp
+    LocalDateTime updateDate;
+
+    public User(String userName, String email, String password){
         this.userName = userName;
+        this.email = email;
         this.password = password;
-        this.authorities = authorities;
+    }
+
+    public User(String userName, String email){
+        this.userName = userName;
+        this.email = email;
     }
 
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+    public boolean equals(Object o){
+        if(this == o)return true;
+        if(!(o instanceof User))return false;
+        return userId != null && userId.equals(((User) o).getUserId());
     }
 
     @Override
-    public String getUsername() {
-        return this.userName;
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
+    public int hashCode(){
+        return getClass().hashCode();
     }
 }
