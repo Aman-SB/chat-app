@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@Table(name = "users")
+@Table(name = "messages")
 @Builder
 public class Message {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column( unique = true , nullable = false)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "message_id")
     Integer messageId;
 
     @ManyToOne
