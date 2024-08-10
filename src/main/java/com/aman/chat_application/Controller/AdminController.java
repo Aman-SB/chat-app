@@ -31,11 +31,6 @@ public class AdminController {
 
     @PutMapping("/updateRole")
     public ResponseEntity<String> updateUserRole(@RequestBody UpdateRoleRequestDto updateRoleRequestDto){
-        try{
             return new ResponseEntity<>(userService.updateUserRole(updateRoleRequestDto),HttpStatus.OK);
-        }
-        catch (Exception ex){
-            return new ResponseEntity<>(userService.updateUserRole(updateRoleRequestDto),HttpStatus.OK);
-        }
     }
 }
