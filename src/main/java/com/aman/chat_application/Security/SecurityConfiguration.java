@@ -5,6 +5,7 @@ import com.aman.chat_application.Model.Role;
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
+import com.aman.chat_application.Security.Service.UserDetailsServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -25,11 +26,17 @@ public class SecurityConfiguration {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
-//        req.anyRequest().authenticated()
-        return http.authorizeHttpRequests((req) -> req.anyRequest().permitAll())
+        return http
+                .authorizeHttpRequests(auth -> auth.anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .httpBasic(Customizer.withDefaults()).build();
+                .httpBasic(Customizer.withDefaults())
+                .build();
+    }
+
+    @Bean
+    public UserDetailsService userDetailsService(UserRepository userRepository) {
+        return new UserDetailsServiceImpl(userRepository);
     }
 
     @Bean
@@ -62,7 +69,7 @@ public class SecurityConfiguration {
             }
 
             if(!userRepository.existsByUserName("admin")){
-                User user1 = User.builder()
+                User admin = User.builder()
                         .userName("admin")
                         .fullName("TestingAdmin")
                         .email("admin@example.com")
@@ -75,10 +82,10 @@ public class SecurityConfiguration {
                         .accountExpiryDate(LocalDate.now().plusYears(1))
                         .isTwoFactorEnabled(false)
                         .signUpMethod("email")
-                        .role(userRole)
+                        .role(adminRole)
                         .build();
 
-                userRepository.save(user1);
+                userRepository.save(admin);
             }
         };
     }

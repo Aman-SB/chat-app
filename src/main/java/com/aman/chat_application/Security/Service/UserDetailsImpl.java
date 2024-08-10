@@ -44,7 +44,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(User user){
-        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().toString());
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getRole().getRoleName().toString());
 
         return new UserDetailsImpl(
                 user.getUserId(),
@@ -58,12 +58,12 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of();
+        return authorities;
     }
 
     @Override
     public String getUsername() {
-        return "";
+        return userName;
     }
 
     @Override

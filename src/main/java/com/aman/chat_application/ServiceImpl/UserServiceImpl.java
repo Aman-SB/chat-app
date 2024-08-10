@@ -2,18 +2,18 @@ package com.aman.chat_application.ServiceImpl;
 
 import com.aman.chat_application.Dto.UpdateRoleRequestDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
+import com.aman.chat_application.Enumerator.AppRole;
+import com.aman.chat_application.Exception.RoleNotFoundException;
+import com.aman.chat_application.Exception.UserNotFoundException;
 import com.aman.chat_application.Mapper.UserMapper;
+import com.aman.chat_application.Model.Role;
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
 import com.aman.chat_application.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -39,7 +39,14 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String updateUserRole(UpdateRoleRequestDto updateRoleRequestDto) {
+        User user = userRepository.findById(updateRoleRequestDto.getUserId())
+                .orElseThrow(() -> new UserNotFoundException("User not found by ID"));
 
-        return null;
+        AppRole appRole = AppRole.valueOf(updateRoleRequestDto.getRole());
+        Role role = roleRepository.findByRoleName(appRole)
+                .orElseThrow(() -> new RoleNotFoundException("Role not found by this RoleName"));
+        user.setRole(role);
+        userRepository.save(user);
+        return "Role have been updated";
     }
 }

@@ -24,7 +24,7 @@ public class AdminController {
         this.userService = userService;
     }
 
-    @GetMapping("/getusers")
+    @GetMapping("/getUsers")
     public ResponseEntity<List<UserDto>> getAllUsers(){
         return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
     }
