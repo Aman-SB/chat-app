@@ -88,6 +88,7 @@ public class User{
     @UpdateTimestamp
     LocalDateTime updateDate;
 
+
     public User(String userName, String email, String password){
         this.userName = userName;
         this.email = email;

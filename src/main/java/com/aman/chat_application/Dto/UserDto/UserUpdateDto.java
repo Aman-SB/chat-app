@@ -2,7 +2,13 @@ package com.aman.chat_application.Dto.UserDto;
 
 import com.aman.chat_application.Dto.Role.RoleDTO;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserUpdateDto {
 
     @Size(max = 20)

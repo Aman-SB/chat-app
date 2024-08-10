@@ -1,6 +1,8 @@
 package com.aman.chat_application.ServiceImpl;
 
+import com.aman.chat_application.Dto.UpdateRoleRequestDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
+import com.aman.chat_application.Mapper.UserMapper;
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
@@ -29,10 +31,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return Optional.of(userRepository.findAll())
-                .orElse(Collections.emptyList())
+        return userRepository.findAll()
                 .stream()
-                .map(user -> )
+                .map(UserMapper.INSTANCE::mapperUserDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public String updateUserRole(UpdateRoleRequestDto updateRoleRequestDto) {
+
+        return null;
     }
 }

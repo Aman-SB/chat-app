@@ -25,7 +25,6 @@ public class Role  {
     @Column(name = "role_id")
     Integer roleId;
 
-    @ToString.Exclude
     @Enumerated(EnumType.STRING)
     @Column(length = 20 , name = "role_name")
     AppRole roleName;
