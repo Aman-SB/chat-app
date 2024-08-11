@@ -11,12 +11,14 @@ import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
 import com.aman.chat_application.Service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
+@Transactional
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
