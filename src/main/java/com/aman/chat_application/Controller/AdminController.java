@@ -33,4 +33,9 @@ public class AdminController {
     public ResponseEntity<String> updateUserRole(@RequestBody UpdateRoleRequestDto updateRoleRequestDto){
             return new ResponseEntity<>(userService.updateUserRole(updateRoleRequestDto),HttpStatus.OK);
     }
+
+    @GetMapping("user/{userId}")
+    public ResponseEntity<UserDto> getUser(@PathVariable("userId") Integer userId){
+        return new ResponseEntity<>(userService.getUser(userId),HttpStatus.FOUND);
+    }
 }

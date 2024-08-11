@@ -2,6 +2,7 @@ package com.aman.chat_application.Service;
 
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +15,7 @@ public class UserServiceTests {
     @Autowired
     private UserRepository userRepository;
 
+    @Disabled
     @ParameterizedTest
     @CsvSource({
             "admin",

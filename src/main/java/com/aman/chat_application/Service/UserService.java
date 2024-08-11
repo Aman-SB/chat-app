@@ -13,4 +13,6 @@ public interface UserService {
     public List<UserDto> getAllUsers();
 
     public String updateUserRole(UpdateRoleRequestDto updateRoleRequestDto);
+
+    public UserDto getUser(Integer userId);
 }

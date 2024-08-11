@@ -15,6 +15,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -51,4 +52,13 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
         return "Role have been updated";
     }
+
+    @Override
+    public UserDto getUser(Integer userId) {
+        return userRepository.findById(userId)
+                .map(UserMapper.INSTANCE::mapperUserDto)
+                .orElseThrow(() -> new UserNotFoundException("User not found with this userId : " + userId));
+    }
+
+
 }
