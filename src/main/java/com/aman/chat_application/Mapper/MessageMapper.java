@@ -13,6 +13,7 @@ public interface MessageMapper {
 
     Message mapperMessage(MessageDTO messageDTO);
 
-    MessageCreateDTO mapperMessageCreateDto(Message message);
+    MessageDTO mapperMessageToDto(Message message);
 
+    Message mapperMessageFromCreate(MessageCreateDTO messageCreateDTO);
 }

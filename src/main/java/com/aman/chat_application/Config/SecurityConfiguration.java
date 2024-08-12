@@ -1,27 +1,31 @@
-package com.aman.chat_application.Security;
+package com.aman.chat_application.Config;
 
 import com.aman.chat_application.Enumerator.AppRole;
 import com.aman.chat_application.Model.Role;
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
-import com.aman.chat_application.Security.Service.UserDetailsServiceImpl;
+import com.aman.chat_application.Config.Service.UserDetailsServiceImpl;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.time.LocalDate;
 
 @Configuration
 @EnableWebSecurity
+@EnableMethodSecurity(prePostEnabled = true,
+        securedEnabled = true,
+        jsr250Enabled = true
+)
 public class SecurityConfiguration {
 
     @Bean

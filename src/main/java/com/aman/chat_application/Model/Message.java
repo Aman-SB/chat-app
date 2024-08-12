@@ -3,6 +3,7 @@ package com.aman.chat_application.Model;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -32,5 +33,6 @@ public class Message {
     String content;
 
     @Column(nullable = false)
+    @CreationTimestamp
     LocalDateTime timestamp;
 }

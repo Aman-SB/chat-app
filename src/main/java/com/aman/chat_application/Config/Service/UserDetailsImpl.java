@@ -1,4 +1,4 @@
-package com.aman.chat_application.Security.Service;
+package com.aman.chat_application.Config.Service;
 
 import com.aman.chat_application.Model.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
