@@ -88,6 +88,12 @@ public class User{
     @UpdateTimestamp
     LocalDateTime updateDate;
 
+    @Size(max = 255)
+    private String bio;
+
+    @Size(max = 255)
+    private String profilePictureUrl;
+
 
     public User(String userName, String email, String password){
         this.userName = userName;

@@ -2,6 +2,7 @@ package com.aman.chat_application.ServiceImpl;
 
 import com.aman.chat_application.Dto.Message.MessageCreateDTO;
 import com.aman.chat_application.Dto.Message.MessageDTO;
+import com.aman.chat_application.Enumerator.ChatEvent;
 import com.aman.chat_application.Exception.ChatNotFoundException;
 import com.aman.chat_application.Exception.UserNotFoundException;
 import com.aman.chat_application.Mapper.MessageMapper;
@@ -12,13 +13,17 @@ import com.aman.chat_application.Repository.ChatRepository;
 import com.aman.chat_application.Repository.MessageRepository;
 import com.aman.chat_application.Repository.UserRepository;
 import com.aman.chat_application.Service.ChatService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 
+
+
 @Service
+@Transactional
 public class ChatServiceImpl implements ChatService {
 
     private final ChatRepository chatRepository;
@@ -83,4 +88,5 @@ public class ChatServiceImpl implements ChatService {
 
         return messageDTO;
     }
+
 }
