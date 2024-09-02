@@ -33,7 +33,7 @@ uniqueConstraints = {
 public class User{
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
     Integer userId;
 
@@ -67,7 +67,7 @@ public class User{
     boolean isTwoFactorEnabled = false;
     private String signUpMethod;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
     @JoinColumn(name = "role_id",referencedColumnName = "role_id")
     @JsonBackReference
     @ToString.Exclude
@@ -93,6 +93,12 @@ public class User{
 
     @Size(max = 255)
     private String profilePictureUrl;
+
+    @Column(name = "reset_token")
+    private String resetToken;
+
+    @Column(name = "token_expiry_date")
+    private LocalDateTime tokenExpiryDate;
 
 
     public User(String userName, String email, String password){

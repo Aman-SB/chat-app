@@ -3,6 +3,7 @@ package com.aman.chat_application.Service;
 import com.aman.chat_application.Dto.Chat.ChatDTO;
 import com.aman.chat_application.Dto.UpdateRoleRequestDto;
 import com.aman.chat_application.Dto.UserDto.ChangePasswordRequestDto;
+import com.aman.chat_application.Dto.UserDto.UserCreateDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
 import com.aman.chat_application.Dto.UserDto.UserProfileDto;
 import com.aman.chat_application.Model.User;
@@ -21,7 +22,7 @@ public interface UserService {
 
     UserProfileDto getUserProfile(Integer userId);
 
-    UserDto createUser(UserDto userDto);
+    UserDto createUser(UserCreateDto userCreateDto);
 
     UserDto updateUser(Integer userId, UserDto userDto);
 

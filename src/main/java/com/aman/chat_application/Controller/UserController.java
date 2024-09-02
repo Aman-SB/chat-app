@@ -3,6 +3,7 @@ package com.aman.chat_application.Controller;
 import com.aman.chat_application.Dto.Chat.ChatDTO;
 import com.aman.chat_application.Dto.UpdateRoleRequestDto;
 import com.aman.chat_application.Dto.UserDto.ChangePasswordRequestDto;
+import com.aman.chat_application.Dto.UserDto.UserCreateDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
 import com.aman.chat_application.Dto.UserDto.UserProfileDto;
 import com.aman.chat_application.Service.UserService;
@@ -21,9 +22,9 @@ public class UserController {
     private final UserService userService;
 
     // Create User (Sign Up)
-    @PostMapping
-    public ResponseEntity<UserDto> createUser(@RequestBody UserDto userDto) {
-        return new ResponseEntity<>(userService.createUser(userDto),HttpStatus.CREATED);
+    @PostMapping("/create")
+    public ResponseEntity<UserDto> createUser(@RequestBody UserCreateDto userCreateDto) {
+        return new ResponseEntity<>(userService.createUser(userCreateDto),HttpStatus.CREATED);
     }
 
     // Get User by ID
@@ -33,10 +34,11 @@ public class UserController {
     }
 
     // Get All Users
-    @GetMapping
+    @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers() {
-        return new ResponseEntity<>(userService.getAllUsers(),HttpStatus.OK);
+        return new ResponseEntity<>(userService.getAllUsers(), HttpStatus.OK);
     }
+
 
     // Update User
     @PutMapping("/{userId}")
@@ -45,7 +47,7 @@ public class UserController {
     }
 
     // Delete User
-    @DeleteMapping("/{userId}")
+    @DeleteMapping("/delete/{userId}")
     public ResponseEntity<Void> deleteUser(@PathVariable Integer userId) {
         userService.deleteUser(userId);
         return ResponseEntity.noContent().build();
@@ -72,7 +74,7 @@ public class UserController {
     }
 
     // Get User Role
-    @GetMapping("/{userId}/role")
+    @GetMapping("/{userId}/get/role")
     public ResponseEntity<String> getUserRole(@PathVariable Integer userId) {
         return ResponseEntity.ok(userService.getUserRole(userId));
     }
@@ -103,7 +105,7 @@ public class UserController {
     }
 
     // Remove User from Chat
-    @DeleteMapping("/{userId}/chats/{chatId}")
+    @DeleteMapping("/{userId}/chats/delete/{chatId}")
     public ResponseEntity<String> removeUserFromChat(@PathVariable Integer userId, @PathVariable Integer chatId) {
         return ResponseEntity.ok(userService.removeUserFromChat(userId, chatId));
     }
@@ -131,5 +133,6 @@ public class UserController {
     public ResponseEntity<UserDto> updateUserBio(@PathVariable Integer userId, @RequestBody String bio) {
         return ResponseEntity.ok(userService.updateUserBio(userId, bio));
     }
+
 
 }

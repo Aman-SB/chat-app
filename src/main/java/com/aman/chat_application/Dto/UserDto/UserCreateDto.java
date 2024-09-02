@@ -1,5 +1,6 @@
 package com.aman.chat_application.Dto.UserDto;
 
+import com.aman.chat_application.Enumerator.AppRole;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,8 @@ public class UserCreateDto {
     @NotBlank
     @Size(max = 120)
     private String password;
+
+    private String roleName;
 
     private String signUpMethod;
 }

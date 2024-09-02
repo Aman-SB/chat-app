@@ -2,7 +2,6 @@ package com.aman.chat_application.ServiceImpl;
 
 import com.aman.chat_application.Dto.Message.MessageCreateDTO;
 import com.aman.chat_application.Dto.Message.MessageDTO;
-import com.aman.chat_application.Enumerator.ChatEvent;
 import com.aman.chat_application.Exception.ChatNotFoundException;
 import com.aman.chat_application.Exception.UserNotFoundException;
 import com.aman.chat_application.Mapper.MessageMapper;

@@ -12,5 +12,4 @@ public interface ChatService {
 
      public MessageDTO addUserToChat(MessageCreateDTO messageCreateDTO);
 
-
 }

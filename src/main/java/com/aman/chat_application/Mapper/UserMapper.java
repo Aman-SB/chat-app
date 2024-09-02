@@ -20,7 +20,7 @@ UserMapper {
 
     UserDto mapperUserDto(User user);
 
-    UserCreateDto mapperUserCreateDto(User user);
+    User mapperUserfromCreate(UserCreateDto userCreateDto);
 
     UserUpdateDto mapperUserUpdateDto(User user);
 
