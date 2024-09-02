@@ -16,6 +16,8 @@ public interface ChatMapper {
 
     ChatDTO mapperChatDto(Chat chat);
 
+    Chat mapperChatDtotoDto(ChatCreateDTO chatCreateDTO);
+
     ChatCreateDTO mapperChatCreateDto(Chat chat);
 
     ChatUpdateDTO mapperChatUpdateDto(Chat chat);
