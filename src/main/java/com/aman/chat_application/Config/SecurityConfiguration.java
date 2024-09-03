@@ -47,6 +47,7 @@ public class SecurityConfiguration {
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/v1/auth/register", "/v1/auth/login", "/v1/auth/reset-password").permitAll()
                         .requestMatchers("/v1/auth/change-password", "/v1/auth/two-factor/enable", "/v1/auth/two-factor/disable").authenticated()
                         .anyRequest().authenticated())

@@ -1,6 +1,7 @@
 package com.aman.chat_application.Enumerator;
 
-public enum ChatEvent {
+public enum MessageType {
+    CHAT,
     JOIN,
     LEAVE
 }

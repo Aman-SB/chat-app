@@ -15,6 +15,4 @@ public class ChatCreateDTO {
 
     private String chatName;
 
-    @NotNull
-    private LocalDateTime createdAt;
 }

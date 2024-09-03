@@ -6,6 +6,7 @@ import com.aman.chat_application.Dto.Chat.ChatUpdateDTO;
 import com.aman.chat_application.Dto.Message.MessageCreateDTO;
 import com.aman.chat_application.Dto.Message.MessageDTO;
 import jakarta.persistence.criteria.CriteriaBuilder;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,15 +16,15 @@ public interface ChatService {
 
      MessageDTO saveMessage(MessageCreateDTO messageCreateDTO);
 
-     MessageDTO addUserToChat(MessageCreateDTO messageCreateDTO);
+     MessageDTO addUserToChat(MessageCreateDTO messageCreateDTO, SimpMessageHeaderAccessor headerAccessor);
 
      ChatDTO getChatDetails(Integer chatId);
 
-     ChatDTO createChat(ChatCreateDTO chatCreateDTO);
+     ChatDTO createChat(String chatName);
 
      void deleteChat(Integer chatId);
 
-     ChatDTO updateChat(Integer chatId, ChatUpdateDTO chatUpdateDTO);
+     ChatDTO updateChat(Integer chatId, String chatName);
 
      List<ChatDTO> getUserChats(Integer userId);
 

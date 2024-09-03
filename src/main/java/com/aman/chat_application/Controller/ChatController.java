@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -32,17 +33,17 @@ public class ChatController {
     }
 
     // Handles messages sent to /app/chat.sendMessage
-    @MessageMapping("/chat.sendMessage")
+    @MessageMapping("/sendMessage")
     @SendTo("/topic/public")
     public MessageDTO sendMessage(@Payload MessageCreateDTO messageCreateDTO) {
         return chatService.saveMessage(messageCreateDTO);
     }
 
     // Handles messages sent to /app/chat.addUser
-    @MessageMapping("/chat.addUser")
+    @MessageMapping("/addUser")
     @SendTo("/topic/public")
-    public MessageDTO addUser(@Payload MessageCreateDTO messageCreateDTO) {
-        return chatService.addUserToChat(messageCreateDTO);
+    public MessageDTO addUser(@Payload MessageCreateDTO messageCreateDTO, SimpMessageHeaderAccessor headerAccessor) {
+        return chatService.addUserToChat(messageCreateDTO,headerAccessor);
     }
 
     @GetMapping("/{chatId}")
@@ -51,21 +52,21 @@ public class ChatController {
         return ResponseEntity.ok(chatDTO);
     }
 
-    @PostMapping
-    public ResponseEntity<ChatDTO> createChat(@RequestBody ChatCreateDTO chatCreateDTO) {
-        ChatDTO chatDTO = chatService.createChat(chatCreateDTO);
+    @PostMapping("/{chatName}")
+    public ResponseEntity<ChatDTO> createChat(@PathVariable String chatName) {
+        ChatDTO chatDTO = chatService.createChat(chatName);
         return ResponseEntity.status(HttpStatus.CREATED).body(chatDTO);
     }
 
-    @DeleteMapping("/{chatId}")
+    @DeleteMapping("/delete/{chatId}")
     public ResponseEntity<String> deleteChat(@PathVariable Integer chatId) {
         chatService.deleteChat(chatId);
         return ResponseEntity.ok("Chat deleted successfully");
     }
 
-    @PutMapping("/{chatId}")
-    public ResponseEntity<ChatDTO> updateChat(@PathVariable Integer chatId, @RequestBody ChatUpdateDTO chatUpdateDTO) {
-        ChatDTO chatDTO = chatService.updateChat(chatId, chatUpdateDTO);
+    @PutMapping("/update/{chatId}")
+    public ResponseEntity<ChatDTO> updateChat(@PathVariable Integer chatId, @RequestParam String chatName) {
+        ChatDTO chatDTO = chatService.updateChat(chatId, chatName);
         return ResponseEntity.ok(chatDTO);
     }
 

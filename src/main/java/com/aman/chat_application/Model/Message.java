@@ -1,6 +1,7 @@
 package com.aman.chat_application.Model;
 
 import com.aman.chat_application.Enumerator.MessageStatus;
+import com.aman.chat_application.Enumerator.MessageType;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
@@ -27,8 +28,11 @@ public class Message {
     Chat chat;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "user_id")
     User user;
+
+    @Column(nullable = false)
+    String username;
 
     @Column(nullable = false, columnDefinition = "TEXT")
     String content;
@@ -36,6 +40,9 @@ public class Message {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     MessageStatus status;
+
+    @Enumerated
+    MessageType type;
 
     @Column(nullable = false)
     @CreationTimestamp

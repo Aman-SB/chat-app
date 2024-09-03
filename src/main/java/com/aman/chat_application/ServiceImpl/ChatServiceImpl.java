@@ -18,6 +18,7 @@ import com.aman.chat_application.Repository.UserRepository;
 import com.aman.chat_application.Service.ChatService;
 import jakarta.persistence.criteria.CriteriaBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
@@ -64,7 +65,7 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public MessageDTO addUserToChat(MessageCreateDTO messageCreateDTO) {
+    public MessageDTO addUserToChat(MessageCreateDTO messageCreateDTO, SimpMessageHeaderAccessor headerAccessor) {
         Chat chat = chatRepository.findById(messageCreateDTO.getChatId())
                 .orElseThrow(() -> new ChatNotFoundException("Chat not found"));
 
@@ -87,6 +88,7 @@ public class ChatServiceImpl implements ChatService {
 
             // Convert to DTO and send via WebSocket
             MessageDTO welcomeMessageDTO = MessageMapper.INSTANCE.mapperMessageToDto(welcomeMessage);
+            headerAccessor.getSessionAttributes().put("username", user.getUserName());
             messagingTemplate.convertAndSend("/topic/chat/" + chat.getChatId(), welcomeMessageDTO);
         }
 
@@ -101,8 +103,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatDTO createChat(ChatCreateDTO chatCreateDTO) {
-        Chat chat = ChatMapper.INSTANCE.mapperChatDtotoDto(chatCreateDTO);
+    public ChatDTO createChat(String chatName) {
+        Chat chat = Chat.builder()
+                .chatName(chatName)
+                .build();
         chat = chatRepository.save(chat);
         return ChatMapper.INSTANCE.mapperChatDto(chat);
     }
@@ -115,10 +119,10 @@ public class ChatServiceImpl implements ChatService {
     }
 
     @Override
-    public ChatDTO updateChat(Integer chatId, ChatUpdateDTO chatUpdateDTO) {
+    public ChatDTO updateChat(Integer chatId, String chatName) {
         Chat chat = chatRepository.findById(chatId)
                 .orElseThrow(() -> new ChatNotFoundException("Chat not found"));
-        chat.setChatName(chatUpdateDTO.getChatName());
+        chat.setChatName(chatName);
         chat = chatRepository.save(chat);
         return ChatMapper.INSTANCE.mapperChatDto(chat);
     }
