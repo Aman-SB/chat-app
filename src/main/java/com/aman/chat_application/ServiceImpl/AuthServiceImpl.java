@@ -55,32 +55,61 @@ public class AuthServiceImpl implements AuthService {
     public UserDto registerUser(@Valid UserCreateDto userCreateDto) {
         logger.debug("Creating user with username: {}", userCreateDto.getUserName());
 
+        // Check if the username is blank
+        if (userCreateDto.getUserName() == null || userCreateDto.getUserName().isBlank()) {
+            logger.error("Username cannot be blank.");
+            throw new IllegalArgumentException("Username cannot be blank.");
+        }
+
+        // Check if the username already exists
         if (userRepository.existsByUserName(userCreateDto.getUserName())) {
             logger.error("Username already exists: {}", userCreateDto.getUserName());
             throw new UsernameAlreadyExistsException("Username already exists.");
         }
 
+        // Check if the email already exists
         if (userRepository.existsByEmail(userCreateDto.getEmail())) {
             logger.error("Email already exists: {}", userCreateDto.getEmail());
             throw new EmailAlreadyExistsException("Email already exists.");
         }
 
+        // Validate password
         if (userCreateDto.getPassword() == null || userCreateDto.getPassword().isEmpty()) {
             logger.error("Password cannot be null or empty.");
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = UserMapper.INSTANCE.mapperUserfromCreate(userCreateDto);
+        // Map the user creation DTO to the User entity
+        User user = UserMapper.INSTANCE.mapperUserFromCreate(userCreateDto);
         user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
-        Role role = roleRepository.findByRoleName(AppRole.valueOf(userCreateDto.getRoleName()))
-                .orElseThrow(() -> new RoleNotFoundException("Role not found with this name"));
+
+        // Set default role if none provided or if the provided role does not exist
+        AppRole appRole;
+        try {
+            appRole = userCreateDto.getRoleName() != null ? AppRole.valueOf(userCreateDto.getRoleName()) : AppRole.ROLE_USER;
+        } catch (IllegalArgumentException e) {
+            logger.warn("Invalid role name provided: {}. Defaulting to ROLE_USER.", userCreateDto.getRoleName());
+            appRole = AppRole.ROLE_USER; // Default role if invalid
+        }
+
+        Role role = roleRepository.findByRoleName(appRole)
+                .orElseGet(() -> roleRepository.findByRoleName(AppRole.ROLE_USER)
+                        .orElseGet(() -> {
+                            logger.info("Default role ROLE_USER not found in the database. Creating new default role.");
+                            return roleRepository.save(new Role(AppRole.ROLE_USER));
+                        }));
+
         user.setRole(role);
 
+        // Save the user to the database
         user = userRepository.save(user);
 
         logger.info("User created successfully with ID: {}", user.getUserId());
-        // Generate token after registration
+
+        // Generate a token after successful registration
         String token = jwtService.generateTokenUser(user);
+
+        // Return the User DTO
         return UserMapper.INSTANCE.mapperUserDto(user);
     }
 
@@ -148,6 +177,7 @@ public class AuthServiceImpl implements AuthService {
 
         sendResetPasswordEmail(user.getEmail(), resetToken);
     }
+
 
     private String generateTwoFactorSecret() {
         SecureRandom random = new SecureRandom();

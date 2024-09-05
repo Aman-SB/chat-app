@@ -1,6 +1,7 @@
 package com.aman.chat_application.Dto.UserDto;
 
 import com.aman.chat_application.Enumerator.AppRole;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
@@ -12,19 +13,14 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class UserCreateDto {
 
-    @NotBlank
-    @Size(max = 20)
+    @NotBlank(message = "Username must not be blank")
     private String userName;
 
-    @NotBlank
-    private String fullName;
-
-    @NotBlank
-    @Size(max = 50)
+    @NotBlank(message = "Email must not be blank")
+    @Email(message = "Invalid email format")
     private String email;
 
-    @NotBlank
-    @Size(max = 120)
+    @NotBlank(message = "Password must not be blank")
     private String password;
 
     private String roleName;

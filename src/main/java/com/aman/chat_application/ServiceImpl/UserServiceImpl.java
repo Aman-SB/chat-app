@@ -109,7 +109,7 @@ public class UserServiceImpl implements UserService {
             throw new IllegalArgumentException("Password cannot be null or empty.");
         }
 
-        User user = UserMapper.INSTANCE.mapperUserfromCreate(userCreateDto);
+        User user = UserMapper.INSTANCE.mapperUserFromCreate(userCreateDto);
         user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         user = userRepository.save(user);
 

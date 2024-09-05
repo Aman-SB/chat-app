@@ -42,7 +42,7 @@ public class User{
     @Column(name = "username")
     String userName;
 
-    @Column(nullable = false)
+    @Column(nullable = true)
     String fullName;
 
     @NotBlank
@@ -67,7 +67,7 @@ public class User{
     boolean isTwoFactorEnabled = false;
     private String signUpMethod;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST})
+    @ManyToOne(fetch = FetchType.EAGER, cascade = {CascadeType.MERGE})
     @JoinColumn(name = "role_id",referencedColumnName = "role_id")
     @JsonBackReference
     @ToString.Exclude

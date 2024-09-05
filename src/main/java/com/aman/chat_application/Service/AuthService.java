@@ -9,15 +9,15 @@ import org.springframework.stereotype.Service;
 
 public interface AuthService {
     
-    public UserDto registerUser(UserCreateDto userCreateDto);
+    UserDto registerUser(UserCreateDto userCreateDto);
 
-    public void changePassword(ChangePasswordRequestDto changePasswordRequestDto);
+    void changePassword(ChangePasswordRequestDto changePasswordRequestDto);
 
-    public void enableTwoFactorAuthentication(String email);
+    void enableTwoFactorAuthentication(String email);
 
-    public void disableTwoFactorAuthentication(String email);
+    void disableTwoFactorAuthentication(String email);
 
-    public String loginUser(LoginRequestDto loginRequestDto);
+    String loginUser(LoginRequestDto loginRequestDto);
 
-    public void resetPassword(PasswordResetRequestDto passwordResetRequestDto);
+    void resetPassword(PasswordResetRequestDto passwordResetRequestDto);
 }
