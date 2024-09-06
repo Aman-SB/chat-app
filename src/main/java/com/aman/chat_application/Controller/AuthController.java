@@ -3,6 +3,7 @@ package com.aman.chat_application.Controller;
 import com.aman.chat_application.Dto.LoginRequestDto;
 import com.aman.chat_application.Dto.PasswordResetRequestDto;
 import com.aman.chat_application.Dto.UserDto.ChangePasswordRequestDto;
+import com.aman.chat_application.Dto.UserDto.TokenUserDto;
 import com.aman.chat_application.Dto.UserDto.UserCreateDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
 import com.aman.chat_application.Service.AuthService;
@@ -29,7 +30,7 @@ public class AuthController {
 
     // Register a new user (Sign Up)
     @PostMapping("/register")
-    public ResponseEntity<UserDto> registerUser(@Valid @RequestBody UserCreateDto userCreateDto) {
+    public ResponseEntity<TokenUserDto> registerUser(@Valid @RequestBody UserCreateDto userCreateDto) {
         logger.debug("Incoming UserCreateDto: {}", userCreateDto);
 
         // Log individual fields if needed
@@ -49,10 +50,6 @@ public class AuthController {
     public ResponseEntity<String> logoutUser(@RequestHeader("Authorization") String authHeader) {
         String token = authHeader.replace("Bearer ", "");
         logger.debug("Logging out user with token: {}", token);
-
-        // Optionally, you might want to perform some actions here
-        // authService.invalidateToken(token); // If you had a mechanism to handle this
-
         return ResponseEntity.ok("User logged out successfully.");
     }
 

@@ -9,6 +9,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class LoginRequestDto {
     
-    private String usernameOrEmail; // Could be username or email depending on your login strategy
+    private String usernameOrEmail;
     private String password;
 }

@@ -4,6 +4,7 @@ import com.aman.chat_application.Config.Jwt.JwtService;
 import com.aman.chat_application.Dto.LoginRequestDto;
 import com.aman.chat_application.Dto.PasswordResetRequestDto;
 import com.aman.chat_application.Dto.UserDto.ChangePasswordRequestDto;
+import com.aman.chat_application.Dto.UserDto.TokenUserDto;
 import com.aman.chat_application.Dto.UserDto.UserCreateDto;
 import com.aman.chat_application.Dto.UserDto.UserDto;
 import com.aman.chat_application.Enumerator.AppRole;
@@ -52,7 +53,7 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     @Transactional
-    public UserDto registerUser(@Valid UserCreateDto userCreateDto) {
+    public TokenUserDto registerUser(@Valid UserCreateDto userCreateDto) {
         logger.debug("Creating user with username: {}", userCreateDto.getUserName());
 
         // Check if the username is blank
@@ -109,8 +110,10 @@ public class AuthServiceImpl implements AuthService {
         // Generate a token after successful registration
         String token = jwtService.generateTokenUser(user);
 
-        // Return the User DTO
-        return UserMapper.INSTANCE.mapperUserDto(user);
+        TokenUserDto tokenUserDto = UserMapper.INSTANCE.mapUserDtoToTokenUserDto(UserMapper.INSTANCE.mapperUserDto(user),token);
+        tokenUserDto.setToken(token); // Set the token separately
+
+        return tokenUserDto;
     }
 
     @Override
