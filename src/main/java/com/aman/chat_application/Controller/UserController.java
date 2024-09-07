@@ -6,7 +6,6 @@ import com.aman.chat_application.Dto.UserDto.*;
 import com.aman.chat_application.Model.User;
 import com.aman.chat_application.Service.FriendService;
 import com.aman.chat_application.Service.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
