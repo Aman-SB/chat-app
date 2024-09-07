@@ -2,24 +2,32 @@ package com.aman.chat_application.Controller;
 
 import com.aman.chat_application.Dto.Chat.ChatDTO;
 import com.aman.chat_application.Dto.UpdateRoleRequestDto;
-import com.aman.chat_application.Dto.UserDto.ChangePasswordRequestDto;
-import com.aman.chat_application.Dto.UserDto.UserCreateDto;
-import com.aman.chat_application.Dto.UserDto.UserDto;
-import com.aman.chat_application.Dto.UserDto.UserProfileDto;
+import com.aman.chat_application.Dto.UserDto.*;
+import com.aman.chat_application.Model.User;
+import com.aman.chat_application.Service.FriendService;
 import com.aman.chat_application.Service.UserService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/v1/user")
-@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
+
+    private final FriendService friendService;
+
+    @Autowired
+    public UserController(UserService userService, FriendService friendService) {
+        this.userService = userService;
+        this.friendService = friendService;
+    }
 
     // Create User (Sign Up)
     @PostMapping("/create")
@@ -134,5 +142,38 @@ public class UserController {
         return ResponseEntity.ok(userService.updateUserBio(userId, bio));
     }
 
+    //update user role
+    @PostMapping("/{userId}/role")
+    public ResponseEntity<String> updateUserRole(@RequestBody UpdateRoleRequestDto updateRoleRequestDto){
+        return ResponseEntity.ok(userService.updateUserRole(updateRoleRequestDto));
+    }
 
+    @GetMapping("/users/search")
+    public ResponseEntity<List<User>> searchUsers(@RequestParam String query) {
+        List<User> users = userService.searchUsers(query);
+        return ResponseEntity.ok(users);
+    }
+
+    @PostMapping("/friends/request")
+    public ResponseEntity<String> sendFriendRequest(@RequestBody FriendRequestDto requestDto) {
+        friendService.sendFriendRequest(requestDto);
+        return ResponseEntity.ok("Friend request sent.");
+    }
+
+    @PostMapping("/friends/accept")
+    public ResponseEntity<String> acceptFriendRequest(@RequestParam Integer requestId) {
+        friendService.acceptFriendRequest(requestId);
+        return ResponseEntity.ok("Friend request accepted.");
+    }
+
+    @PostMapping("/friends/decline")
+    public ResponseEntity<String> declineFriendRequest(@RequestParam Integer requestId) {
+        friendService.declineFriendRequest(requestId);
+        return ResponseEntity.ok("Friend request declined.");
+    }
+
+    @GetMapping("/{userId}/friends")
+    public ResponseEntity<Set<UserDto>> getAllFriend(@PathVariable(value = "userId") Integer userId){
+        return ResponseEntity.ok(userService.getAllFriends(userId));
+    }
 }

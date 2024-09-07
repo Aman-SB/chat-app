@@ -9,12 +9,12 @@ import com.aman.chat_application.Repository.RoleRepository;
 import com.aman.chat_application.Repository.UserRepository;
 import com.aman.chat_application.ServiceImpl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -38,6 +38,9 @@ public class SecurityConfiguration {
     private final JwtService jwtService;
     private final UserDetailsServiceImpl userDetailsService;
 
+    @Value("${frontend.url}")
+    private String frontendUrl;
+
     @Autowired
     public SecurityConfiguration(JwtService jwtTokenProvider, UserDetailsServiceImpl userDetailsService) {
         this.jwtService = jwtTokenProvider;
@@ -52,6 +55,7 @@ public class SecurityConfiguration {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/ws/**").permitAll()
+                        .requestMatchers("/docs","/swagger-ui.html", "/v3/api-docs/**", "/swagger-ui/**").permitAll()
                         .requestMatchers("/actuator/**").permitAll()
                         .requestMatchers("/v1/auth/register", "/v1/auth/login", "/v1/auth/reset-password").permitAll()
                         .requestMatchers("/v1/auth/change-password", "/v1/auth/two-factor/enable", "/v1/auth/two-factor/disable").authenticated()
@@ -63,7 +67,7 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOrigins(List.of("http://localhost:3000")); // Add allowed origins
+        configuration.setAllowedOrigins(List.of(frontendUrl));
         configuration.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         configuration.setAllowCredentials(true);

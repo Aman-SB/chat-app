@@ -100,6 +100,24 @@ public class User{
     @Column(name = "token_expiry_date")
     private LocalDateTime tokenExpiryDate;
 
+    @ManyToMany
+    @JoinTable(
+            name = "user_friends",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "friend_id")
+    )
+    private Set<User> friends = new HashSet<>();
+
+    public void addFriend(User friend) {
+        friends.add(friend);
+        friend.getFriends().add(this);
+    }
+
+    public void removeFriend(User friend) {
+        friends.remove(friend);
+        friend.getFriends().remove(this);
+    }
+
 
     public User(String userName, String email, String password){
         this.userName = userName;

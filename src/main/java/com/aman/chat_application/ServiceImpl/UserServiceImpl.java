@@ -28,6 +28,7 @@ import org.slf4j.Logger;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -303,6 +304,24 @@ public class UserServiceImpl implements UserService {
         user = userRepository.save(user);
 
         return UserMapper.INSTANCE.mapperUserDto(user);
+    }
+
+    @Override
+    public List<User> searchUsers(String query) {
+        return userRepository.findByUserNameContainingIgnoreCaseOrEmailContainingIgnoreCase(query, query);
+    }
+
+    @Override
+    public Set<UserDto> getAllFriends(Integer userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("User not found"));
+
+        // Return the set of friends
+        Set<UserDto> friends = user.getFriends().stream()
+                .map(UserMapper.INSTANCE::mapperUserDto)
+                .collect(Collectors.toSet());
+
+        return friends;
     }
 
 

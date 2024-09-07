@@ -10,6 +10,7 @@ import com.aman.chat_application.Model.User;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 @Service
 public interface UserService {
@@ -51,4 +52,8 @@ public interface UserService {
     UserDto extendAccountExpiry(Integer userId);
 
     UserDto updateUserBio(Integer userId, String bio);
+
+    List<User> searchUsers(String query);
+
+    Set<UserDto> getAllFriends(Integer userId);
 }
